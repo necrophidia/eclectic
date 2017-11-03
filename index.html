@@ -401,9 +401,9 @@
         function DeleteCategoryName(flaggedCategoryName)
         {
             if(!currentFileSystem){
-                return;
+                console.log('file system warning');
             }
-            currentFileSystem.root.getFile('EclecticRoulette/Data/Category.etf', {}, function(fileEntry) {
+            currentFileSystem.root.getFile('data/Category.etf', {}, function(fileEntry) {
                 fileEntry.file(function(file) {
                     var reader = new FileReader();
                     reader.onloadend = function(e) {
@@ -418,14 +418,14 @@
                                 }
                             }
                             fileEntry.remove(function() {
-                                currentFileSystem.root.getFile('EclecticRoulette/Data/Category.etf', {create: true}, function(newCreatedFileEntry) {
+                                currentFileSystem.root.getFile('data/Category.etf', {create: true}, function(newCreatedFileEntry) {
                                     categoryList.innerHTML = '';
                                     categoryNewText.value = '';
                                     newCreatedFileEntry.createWriter(function(fileWriter) {
                                         fileWriter.seek(fileWriter.length);
                                         var blob = new Blob([storedCategoryName], {type: 'text/plain'});
                                         fileWriter.write(blob);
-                                        currentFileSystem.root.getFile('EclecticRoulette/Data/Category.etf', {}, function(newFileEntry) {
+                                        currentFileSystem.root.getFile('data/Category.etf', {}, function(newFileEntry) {
                                             newFileEntry.file(function(file) {
                                                 var reader = new FileReader();
                                                 reader.onloadend = function(e) {
@@ -457,38 +457,17 @@
         /** Region Data */
 
         function ErrorHandler(e){
-            var msg = '';
-            switch (e.code){
-                case FileError.QUOTA_EXCEEDED_ERR:
-                    msg = 'QUOTA_EXCEEDED_ERR';
-                    break;
-                case FileError.NOT_FOUND_ERR:
-                    msg = 'NOT_FOUND_ERR';
-                    break;
-                case FileError.SECURITY_ERR:
-                    msg = 'SECURITY_ERR';
-                    break;
-                case FileError.INVALID_MODIFICATION_ERR:
-                    msg = 'INVALID_MODIFICATION_ERR';
-                    break;
-                case FileError.INVALID_STATE_ERR:
-                    msg = 'INVALID_STATE_ERR';
-                    break;
-                default:
-                    msg = 'Unknown Error';
-                    break;
-            };
-            alert('Error: ' + msg);
+            console.log(e);
+            alert('Error');
         }
 
         function InitFS() {
             window.requestFileSystem(window.TEMPORARY, 1024*1024, function(filesystem) {
                 currentFileSystem = filesystem;
-                currentFileSystem.root.getDirectory('EclecticRoulette', {create: true}, null, ErrorHandler);
-                currentFileSystem.root.getDirectory('EclecticRoulette/Data', {create: true}, null, ErrorHandler);
-                currentFileSystem.root.getFile('EclecticRoulette/Data/Category.etf', {create: true}, null, ErrorHandler);
-                currentFileSystem.root.getFile('EclecticRoulette/Data/Choices.etf', {create: true}, null, ErrorHandler);
-                currentFileSystem.root.getFile('EclecticRoulette/Data/Category.etf', {}, function(fileEntry) {
+                currentFileSystem.root.getDirectory('data', {create: true}, null, ErrorHandler);
+                currentFileSystem.root.getFile('data/Category.etf', {create: true}, null, ErrorHandler);
+                currentFileSystem.root.getFile('data/Choices.etf', {create: true}, null, ErrorHandler);
+                currentFileSystem.root.getFile('data/Category.etf', {}, function(fileEntry) {
                     fileEntry.file(function(file) {
                         var reader = new FileReader();
                         reader.onloadend = function(e) {
@@ -528,13 +507,13 @@
             }
             if(categoryNewText.value != '')
             {
-                currentFileSystem.root.getFile('EclecticRoulette/Data/Category.etf', {create: false}, function(fileEntry) {
+                currentFileSystem.root.getFile('data/Category.etf', {create: false}, function(fileEntry) {
                     fileEntry.createWriter(function(fileWriter) {
                         fileWriter.seek(fileWriter.length);
                         var blob = new Blob([categoryNewText.value + '\n'], {type: 'text/plain'});
                         fileWriter.write(blob);
                         categoryNewText.value = '';
-                        currentFileSystem.root.getFile('EclecticRoulette/Data/Category.etf', {}, function(fileEntry) {
+                        currentFileSystem.root.getFile('data/Category.etf', {}, function(fileEntry) {
                             fileEntry.file(function(file) {
                                 var reader = new FileReader();
                                 reader.onloadend = function(e) {
@@ -564,10 +543,10 @@
             if(!currentFileSystem){
                 return;
             }
-            currentFileSystem.root.getFile('EclecticRoulette/Data/Category.etf', {create: false}, function(fileEntry) {
+            currentFileSystem.root.getFile('data/Category.etf', {create: false}, function(fileEntry) {
                 fileEntry.remove(function() {
                     categoryList.innerHTML = '';
-                    currentFileSystem.root.getFile('EclecticRoulette/Data/Category.etf', {create: true}, null, ErrorHandler);
+                    currentFileSystem.root.getFile('data/Category.etf', {create: true}, null, ErrorHandler);
                 }, ErrorHandler);
             }, ErrorHandler);
         }, false);
